@@ -6,7 +6,7 @@ const prisma = new PrismaClient()
 async function main() {
     console.log("Fixing all accessory images...");
 
-    const accessoryImages = {
+    const accessoryImages: Record<string, string> = {
         "LED Underglow Kit": "https://images.unsplash.com/photo-1550009158-9ebf69173e03?q=80&w=2000&auto=format&fit=crop",
         "Roof Rack System": "https://images.unsplash.com/photo-1632823471367-938b8c5ccff5?q=80&w=2000&auto=format&fit=crop",
         "Battery Charger / Maintainer": "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?q=80&w=2000&auto=format&fit=crop",
