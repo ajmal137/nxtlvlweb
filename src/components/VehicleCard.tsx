@@ -50,7 +50,7 @@ export default function VehicleCard({ vehicle }: VehicleProps) {
                         <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{vehicle.brand}</h3>
                         <h2 className="text-xl font-bold text-white group-hover:text-primary transition-colors">{vehicle.model}</h2>
                     </div>
-                    <p className="text-lg font-bold text-primary">${vehicle.price.toLocaleString()}</p>
+                    <p className="text-lg font-bold text-primary">₹{vehicle.price.toLocaleString('en-IN')}</p>
                 </div>
             </CardHeader>
 
@@ -58,7 +58,7 @@ export default function VehicleCard({ vehicle }: VehicleProps) {
                 <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
                     <div className="flex items-center gap-2">
                         <Gauge className="w-4 h-4 text-primary" />
-                        <span>{vehicle.mileage.toLocaleString()} mi</span>
+                        <span>{vehicle.mileage.toLocaleString('en-IN')} mi</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4 text-primary" />

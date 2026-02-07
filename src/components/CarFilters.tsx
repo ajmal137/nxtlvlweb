@@ -34,7 +34,7 @@ export default function CarFilters() {
             <div className="space-y-4">
                 <div className="flex justify-between items-center">
                     <Label className="text-white">Price Range</Label>
-                    <span className="text-xs text-primary font-mono">${priceRange[0].toLocaleString('en-US')} - ${priceRange[1].toLocaleString('en-US')}</span>
+                    <span className="text-xs text-primary font-mono">₹{priceRange[0].toLocaleString('en-IN')} - ₹{priceRange[1].toLocaleString('en-IN')}</span>
                 </div>
                 <Slider
                     defaultValue={[10000, 500000]}
@@ -49,7 +49,7 @@ export default function CarFilters() {
             <div className="space-y-4">
                 <div className="flex justify-between items-center">
                     <Label className="text-white">Mileage</Label>
-                    <span className="text-xs text-primary font-mono">{mileageRange[0].toLocaleString('en-US')} - {mileageRange[1].toLocaleString('en-US')} mi</span>
+                    <span className="text-xs text-primary font-mono">{mileageRange[0].toLocaleString('en-IN')} - {mileageRange[1].toLocaleString('en-IN')} mi</span>
                 </div>
                 <Slider
                     defaultValue={[0, 100000]}

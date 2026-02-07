@@ -5,7 +5,7 @@ import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign, Percent, Calendar } from "lucide-react";
+import { IndianRupee, Percent, Calendar } from "lucide-react";
 
 export default function FinanceCalculator({ initialPrice = 50000 }: { initialPrice?: number }) {
     const [price, setPrice] = useState(initialPrice);
@@ -32,7 +32,7 @@ export default function FinanceCalculator({ initialPrice = 50000 }: { initialPri
         <Card className="bg-card/50 backdrop-blur-sm border-white/10 text-white">
             <CardHeader>
                 <CardTitle className="text-xl font-bold flex items-center gap-2">
-                    <DollarSign className="text-primary h-5 w-5" />
+                    <IndianRupee className="text-primary h-5 w-5" />
                     Finance Calculator
                 </CardTitle>
             </CardHeader>
@@ -40,7 +40,7 @@ export default function FinanceCalculator({ initialPrice = 50000 }: { initialPri
                 <div className="space-y-2">
                     <div className="flex justify-between">
                         <Label>Vehicle Price</Label>
-                        <span className="font-mono text-primary">${price.toLocaleString('en-US')}</span>
+                        <span className="font-mono text-primary">₹{price.toLocaleString('en-IN')}</span>
                     </div>
                     <Slider
                         value={[price]}
@@ -55,7 +55,7 @@ export default function FinanceCalculator({ initialPrice = 50000 }: { initialPri
                 <div className="space-y-2">
                     <div className="flex justify-between">
                         <Label>Down Payment ({Math.round((downPayment / price) * 100)}%)</Label>
-                        <span className="font-mono text-primary">${downPayment.toLocaleString('en-US')}</span>
+                        <span className="font-mono text-primary">₹{downPayment.toLocaleString('en-IN')}</span>
                     </div>
                     <Slider
                         value={[downPayment]}
@@ -100,7 +100,7 @@ export default function FinanceCalculator({ initialPrice = 50000 }: { initialPri
                     <div className="flex justify-between items-end">
                         <span className="text-muted-foreground">Estimated Monthly Payment</span>
                         <span className="text-3xl font-bold text-primary">
-                            ${monthlyPayment.toLocaleString('en-US', { maximumFractionDigits: 0 })}
+                            ₹{monthlyPayment.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                         </span>
                     </div>
                 </div>

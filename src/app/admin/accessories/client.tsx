@@ -185,7 +185,7 @@ export default function AccessoryInventoryClient({
                                 </TableCell>
                                 <TableCell className="font-medium text-white">{item.name}</TableCell>
                                 <TableCell className="font-mono text-primary">
-                                    ${item.price.toLocaleString("en-US")}
+                                    ₹{item.price.toLocaleString("en-IN")}
                                 </TableCell>
                                 <TableCell className="text-right space-x-2">
                                     <Button

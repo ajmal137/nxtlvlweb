@@ -40,7 +40,7 @@ export default function AccessoryCard({ accessory }: AccessoryProps) {
                         <h2 className="text-lg font-bold text-white group-hover:text-primary transition-colors truncate">{accessory.name}</h2>
                     </div>
                     <div className="flex items-center justify-between w-full">
-                        <p className="text-lg font-bold text-primary">${accessory.price.toFixed(2)}</p>
+                        <p className="text-lg font-bold text-primary">₹{accessory.price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                         <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                             <Badge variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white cursor-pointer transition-colors">
                                 Quick View

@@ -199,7 +199,7 @@ export default function CarInventoryClient({ initialCars }: { initialCars: Car[]
                                 <TableCell className="text-muted-foreground">{car.model}</TableCell>
                                 <TableCell className="text-muted-foreground">{car.year}</TableCell>
                                 <TableCell className="font-mono text-primary">
-                                    ${car.price.toLocaleString("en-US")}
+                                    ₹{car.price.toLocaleString("en-IN")}
                                 </TableCell>
                                 <TableCell className="text-right space-x-2">
                                     <Button

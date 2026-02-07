@@ -42,7 +42,7 @@ export default function AdminDashboard() {
                         <DollarSign className="h-4 w-4 text-primary" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-white">${(totalInventoryValue + totalAccessoriesValue).toLocaleString()}</div>
+                        <div className="text-2xl font-bold text-white">₹{(totalInventoryValue + totalAccessoriesValue).toLocaleString('en-IN')}</div>
                         <p className="text-xs text-muted-foreground">+12% from last month</p>
                     </CardContent>
                 </Card>
