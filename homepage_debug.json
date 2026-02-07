@@ -1,0 +1,169 @@
+{
+  "cars": [
+    {
+      "id": 5,
+      "brand": "Toyota",
+      "model": "Innova G4",
+      "year": 2014,
+      "price": 600000,
+      "mileage": 1200,
+      "image": "https://zowlqqtsqyobkpjssrzo.supabase.co/storage/v1/object/public/inventory/99pp19ues5-1770469402038.jpg",
+      "specs": {
+        "topSpeed": "180mph",
+        "acceleration": "3.4s 0-60"
+      },
+      "createdAt": "2026-02-07T11:57:58.313Z",
+      "updatedAt": "2026-02-07T13:03:23.801Z"
+    },
+    {
+      "id": 4,
+      "brand": "Toyota",
+      "model": "Innova Crysta",
+      "year": 2020,
+      "price": 750000,
+      "mileage": 500,
+      "image": "https://zowlqqtsqyobkpjssrzo.supabase.co/storage/v1/object/public/inventory/qcoj9xjknmn-1770469421186.jpg",
+      "specs": {
+        "power": "637 hp",
+        "range": "232 mi",
+        "topSpeed": "155mph",
+        "acceleration": "3.1s 0-60"
+      },
+      "createdAt": "2026-02-07T11:35:47.561Z",
+      "updatedAt": "2026-02-07T13:03:42.716Z"
+    },
+    {
+      "id": 3,
+      "brand": "Mercedes-AMG",
+      "model": "GT Black Series",
+      "year": 2022,
+      "price": 325000,
+      "mileage": 950,
+      "image": "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=2070&auto=format&fit=crop",
+      "specs": {
+        "power": "720 hp",
+        "range": "N/A",
+        "topSpeed": "202mph",
+        "acceleration": "3.1s 0-60"
+      },
+      "createdAt": "2026-02-07T11:35:46.424Z",
+      "updatedAt": "2026-02-07T11:35:46.424Z"
+    },
+    {
+      "id": 2,
+      "brand": "Toyota",
+      "model": "Fortuner",
+      "year": 2023,
+      "price": 225000,
+      "mileage": 3200,
+      "image": "https://zowlqqtsqyobkpjssrzo.supabase.co/storage/v1/object/public/inventory/417a0w1hz44-1770469438139.jpg",
+      "specs": {
+        "power": "502 hp",
+        "range": "N/A",
+        "topSpeed": "197mph",
+        "acceleration": "3.2s 0-60"
+      },
+      "createdAt": "2026-02-07T11:35:45.132Z",
+      "updatedAt": "2026-02-07T13:03:59.343Z"
+    },
+    {
+      "id": 1,
+      "brand": "Tesla",
+      "model": "Model S Plaid",
+      "year": 2024,
+      "price": 89990,
+      "mileage": 1500,
+      "image": "https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=2070&auto=format&fit=crop",
+      "specs": {
+        "power": "1,020 hp",
+        "range": "396 mi",
+        "topSpeed": "200mph",
+        "acceleration": "1.99s 0-60"
+      },
+      "createdAt": "2026-02-07T11:35:44.173Z",
+      "updatedAt": "2026-02-07T11:35:44.173Z"
+    }
+  ],
+  "accessories": [
+    {
+      "id": 10,
+      "name": "LED Underglow Kit",
+      "price": 199,
+      "image": "https://images.unsplash.com/photo-1550009158-9ebf69173e03?q=80&w=2000&auto=format&fit=crop",
+      "createdAt": "2026-02-07T11:35:58.452Z",
+      "updatedAt": "2026-02-07T12:39:23.863Z"
+    },
+    {
+      "id": 9,
+      "name": "Roof Rack System",
+      "price": 650,
+      "image": "https://images.unsplash.com/photo-1632823471367-938b8c5ccff5?q=80&w=2000&auto=format&fit=crop",
+      "createdAt": "2026-02-07T11:35:57.559Z",
+      "updatedAt": "2026-02-07T12:39:22.269Z"
+    },
+    {
+      "id": 8,
+      "name": "Battery Charger / Maintainer",
+      "price": 120,
+      "image": "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?q=80&w=2000&auto=format&fit=crop",
+      "createdAt": "2026-02-07T11:35:56.723Z",
+      "updatedAt": "2026-02-07T12:39:20.557Z"
+    },
+    {
+      "id": 7,
+      "name": "Car Cover (Outdoor)",
+      "price": 250,
+      "image": "https://images.unsplash.com/photo-1507136566006-cfc505b8a4f3?q=80&w=2000&auto=format&fit=crop",
+      "createdAt": "2026-02-07T11:35:55.881Z",
+      "updatedAt": "2026-02-07T12:39:18.753Z"
+    },
+    {
+      "id": 6,
+      "name": "All-Weather Floor Mats",
+      "price": 180,
+      "image": "https://images.unsplash.com/photo-1529369986348-73599d0ce473?q=80&w=2000&auto=format&fit=crop",
+      "createdAt": "2026-02-07T11:35:55.039Z",
+      "updatedAt": "2026-02-07T12:39:16.710Z"
+    },
+    {
+      "id": 5,
+      "name": "Dashboard Camera 4K",
+      "price": 450,
+      "image": "https://images.unsplash.com/photo-1589739900243-4b52cd9b104e?q=80&w=2000&auto=format&fit=crop",
+      "createdAt": "2026-02-07T11:35:54.052Z",
+      "updatedAt": "2026-02-07T12:39:14.737Z"
+    },
+    {
+      "id": 4,
+      "name": "Forged Racing Wheels (Set)",
+      "price": 4800,
+      "image": "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=2000&auto=format&fit=crop",
+      "createdAt": "2026-02-07T11:35:52.804Z",
+      "updatedAt": "2026-02-07T12:39:12.356Z"
+    },
+    {
+      "id": 3,
+      "name": "Ceramic Coating Kit",
+      "price": 299,
+      "image": "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?q=80&w=2000&auto=format&fit=crop",
+      "createdAt": "2026-02-07T11:35:51.427Z",
+      "updatedAt": "2026-02-07T12:39:10.597Z"
+    },
+    {
+      "id": 2,
+      "name": "Performance Exhaust System",
+      "price": 3500,
+      "image": "https://images.unsplash.com/photo-1565590216127-10651752b02d?q=80&w=2070&auto=format&fit=crop",
+      "createdAt": "2026-02-07T11:35:50.472Z",
+      "updatedAt": "2026-02-07T11:35:50.472Z"
+    },
+    {
+      "id": 1,
+      "name": "Carbon Fiber Spoiler",
+      "price": 1250,
+      "image": "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=2070&auto=format&fit=crop",
+      "createdAt": "2026-02-07T11:35:49.539Z",
+      "updatedAt": "2026-02-07T11:35:49.539Z"
+    }
+  ]
+}

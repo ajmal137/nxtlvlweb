@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Car {
+  id        Int      @id @default(autoincrement())
+  brand     String
+  model     String
+  year      Int
+  price     Float
+  mileage   Int
+  image     String
+  // Storing specs as JSON for flexibility (acceleration, topSpeed, power, range, etc.)
+  specs     Json?    
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Accessory {
+  id        Int      @id @default(autoincrement())
+  name      String
+  price     Float
+  image     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
