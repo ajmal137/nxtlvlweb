@@ -8,12 +8,16 @@ import { revalidatePath } from "next/cache";
 
 export async function getCars() {
     try {
+        console.log("Fetching cars from database...");
         const cars = await prisma.car.findMany({
             orderBy: { createdAt: "desc" },
         });
+        console.log(`Successfully fetched ${cars.length} cars.`);
         return { data: cars, error: null };
     } catch (error) {
         console.error("Error fetching cars:", error);
+        // Log environment variable status (without revealing value)
+        console.log("DATABASE_URL set:", !!process.env.DATABASE_URL);
         return { data: [], error: "Failed to fetch cars" };
     }
 }
