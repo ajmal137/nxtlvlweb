@@ -14,10 +14,18 @@ let serviceAccount: any;
 try {
     const key = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
     if (key) {
+        console.log(`Found FIREBASE_SERVICE_ACCOUNT_KEY (Length: ${key.length})`);
         serviceAccount = JSON.parse(key);
         // Fix private_key newlines if they are escaped
         if (serviceAccount && serviceAccount.private_key) {
-            serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+            // Handle both literal \n characters and double escaped \\n
+            if (serviceAccount.private_key.includes('\\n')) {
+                serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+            }
+
+            console.log(`Parsed Private Key Length: ${serviceAccount.private_key.length}`);
+            console.log(`Private Key Starts With: ${serviceAccount.private_key.substring(0, 30)}...`);
+            console.log(`Private Key Ends With: ...${serviceAccount.private_key.substring(serviceAccount.private_key.length - 30)}`);
         }
     }
 } catch (error) {
