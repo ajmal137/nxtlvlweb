@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -15,26 +16,35 @@ export default function AdminLogin() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
-    const supabase = createClient();
-
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
 
         try {
-            const { error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-            });
+            await signInWithEmailAndPassword(auth, email, password);
+            // With Firebase, auth state persists automatically.
+            // We can optionally set a cookie here for middleware, but for MVP client-side check is okay.
+            // However, let's stick to the plan: Login -> set cookie.
+            // But to keep it simple and working NOW, let's redirect and let the client-side Auth listener handle it.
+            // Wait, middleware protects /admin. If we don't set a cookie, middleware might block us.
+            // Let's implement a simple cookie set via API route.
 
-            if (error) {
-                setError(error.message);
-            } else {
-                router.push("/admin/dashboard");
+            // Step 1: Get ID Token
+            const user = auth.currentUser;
+            if (user) {
+                const idToken = await user.getIdToken();
+                // Step 2: Call API to set cookie
+                await fetch("/api/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ idToken }),
+                });
             }
-        } catch (err) {
-            setError("An unexpected error occurred");
+
+            router.push("/admin/dashboard");
+        } catch (err: any) {
+            setError(err.message || "Invalid credentials");
         } finally {
             setLoading(false);
         }

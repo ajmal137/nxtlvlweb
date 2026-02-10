@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import { Plus, Pencil, Trash2, Upload, ImageIcon } from "lucide-react";
 import { createAccessory, updateAccessory, deleteAccessory } from "@/lib/actions";
-import { uploadImage } from "@/lib/supabase/storage";
+import { uploadImage } from "@/lib/firebase/storage";
 
 // Simple type definition based on Prisma model
 type Accessory = {
@@ -92,7 +92,7 @@ export default function AccessoryInventoryClient({
 
         if (selectedFile) {
             setUploading(true);
-            const { url, error } = await uploadImage(selectedFile);
+            const { url, error } = await uploadImage(selectedFile, "accessories");
             setUploading(false);
 
             if (error) {

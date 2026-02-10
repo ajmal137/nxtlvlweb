@@ -55,9 +55,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         variant="ghost"
                         className="w-full justify-start gap-3 text-red-500 hover:text-red-400 hover:bg-red-500/10"
                         onClick={async () => {
-                            const { createClient } = await import("@/lib/supabase/client");
-                            const supabase = createClient();
-                            await supabase.auth.signOut();
+                            await fetch("/api/logout", { method: "POST" });
                             window.location.href = "/admin/login";
                         }}
                     >

@@ -42,10 +42,24 @@ if (!serviceAccount) {
     }
 }
 
-if (!getApps().length && serviceAccount) {
-    initializeApp({
-        credential: cert(serviceAccount),
-    });
+
+if (!getApps().length) {
+    if (serviceAccount) {
+        initializeApp({
+            credential: cert(serviceAccount),
+        });
+    } else {
+        // Prevent build from crashing if we are just linting or typechecking, 
+        // but robustly warn. 
+        // However, Next.js build tries to render static pages, so we might need to mock or fail.
+        if (process.env.NODE_ENV === 'production') {
+            console.error("🔥 FIREBASE ADMIN INIT FAILED: No service account found. Check FIREBASE_SERVICE_ACCOUNT_KEY env var.");
+            // Throwing here might break build, but that is better than runtime errors later
+            throw new Error("FIREBASE_SERVICE_ACCOUNT_KEY is missing or invalid.");
+        } else {
+            console.warn("⚠️ FIREBASE ADMIN INIT SKIPPED: No service account.");
+        }
+    }
 }
 
 const adminDb = getFirestore();

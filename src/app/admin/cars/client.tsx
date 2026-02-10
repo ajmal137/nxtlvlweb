@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import { Plus, Pencil, Trash2, Upload, ImageIcon } from "lucide-react";
 import { createCar, updateCar, deleteCar } from "@/lib/actions";
-import { uploadImage } from "@/lib/supabase/storage";
+import { uploadImage } from "@/lib/firebase/storage";
 
 // Simple type definition based on Prisma model
 type Car = {
@@ -102,7 +102,7 @@ export default function CarInventoryClient({ initialCars }: { initialCars: Car[]
         // Upload image if a new file is selected
         if (selectedFile) {
             setUploading(true);
-            const { url, error } = await uploadImage(selectedFile);
+            const { url, error } = await uploadImage(selectedFile, "vehicles");
             setUploading(false);
 
             if (error) {
