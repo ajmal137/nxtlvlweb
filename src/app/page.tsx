@@ -198,16 +198,17 @@ export default async function Home() {
               </ul>
             </div>
             <div>
-              <h4 className="font-bold text-white mb-4">Newsletter</h4>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="bg-background/50 border border-white/10 rounded-md px-3 py-2 text-sm w-full focus:outline-none focus:border-primary transition-colors"
-                />
-                <Button size="icon" className="bg-primary hover:bg-primary/90 text-white shrink-0">
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
+              <h4 className="font-bold text-white mb-4">Contact Us</h4>
+              <div className="space-y-4 text-sm text-muted-foreground">
+                <p>
+                  1st floor, Bus stand building,<br />
+                  Pothukallu, Nilambur,<br />
+                  Kerala-679334
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="font-bold text-white">Mob:</span>
+                  <a href="tel:+919061909059" className="hover:text-primary transition-colors">+91 90619 09059</a>
+                </p>
               </div>
             </div>
           </div>
