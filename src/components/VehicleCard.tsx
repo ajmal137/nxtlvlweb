@@ -30,7 +30,6 @@ interface VehicleProps {
 import { useState } from "react";
 import { createTestDrive } from "@/lib/actions";
 import { CheckCircle2, Loader2 } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
 
 export default function VehicleCard({ vehicle }: VehicleProps) {
     const [loading, setLoading] = useState(false);
