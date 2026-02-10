@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 
 interface VehicleProps {
     vehicle: {
-        id: number;
+        id: string;
         brand: string;
         model: string;
         year: number;

@@ -1,39 +1,45 @@
 "use server";
 
-import prisma from "@/lib/prisma";
+import { adminDb } from "@/lib/firebase/admin";
 import { revalidatePath } from "next/cache";
 
+// --- HELPERS ---
+
+const mapDoc = (doc: any) => ({
+    id: doc.id,
+    ...doc.data()
+});
 
 // --- CARS ---
 
 export async function getCars() {
     try {
-        console.log("Fetching cars from database...");
-        const cars = await prisma.car.findMany({
-            orderBy: { createdAt: "desc" },
-        });
+        console.log("Fetching cars from Firestore...");
+        const snapshot = await adminDb.collection("cars").orderBy("createdAt", "desc").get();
+        const cars = snapshot.docs.map(mapDoc);
         console.log(`Successfully fetched ${cars.length} cars.`);
         return { data: cars, error: null };
     } catch (error) {
         console.error("Error fetching cars:", error);
-        // Log environment variable status (without revealing value)
-        console.log("DATABASE_URL set:", !!process.env.DATABASE_URL);
         return { data: [], error: "Failed to fetch cars" };
     }
 }
 
 export async function createCar(data: any) {
     try {
-        // Basic validation could happen here
-        const car = await prisma.car.create({
-            data: {
-                ...data,
-                year: Number(data.year),
-                price: Number(data.price),
-                mileage: Number(data.mileage),
-                specs: data.specs || {},
-            },
-        });
+        const carData = {
+            ...data,
+            year: Number(data.year),
+            price: Number(data.price),
+            mileage: Number(data.mileage),
+            specs: data.specs || {},
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+        };
+
+        const docRef = await adminDb.collection("cars").add(carData);
+        const car = { id: docRef.id, ...carData };
+
         revalidatePath("/admin/cars");
         revalidatePath("/");
         return { data: car, error: null };
@@ -43,17 +49,24 @@ export async function createCar(data: any) {
     }
 }
 
-export async function updateCar(id: number, data: any) {
+export async function updateCar(id: string, data: any) {
     try {
-        const car = await prisma.car.update({
-            where: { id },
-            data: {
-                ...data,
-                year: data.year ? Number(data.year) : undefined,
-                price: data.price ? Number(data.price) : undefined,
-                mileage: data.mileage ? Number(data.mileage) : undefined,
-            },
-        });
+        const updateData = {
+            ...data,
+            updatedAt: new Date().toISOString(),
+        };
+        // Clean undefined values
+        if (data.year) updateData.year = Number(data.year);
+        if (data.price) updateData.price = Number(data.price);
+        if (data.mileage) updateData.mileage = Number(data.mileage);
+
+        await adminDb.collection("cars").doc(id).update(updateData);
+
+        // Fetch updated doc to return
+        // Optimisation: just return merged data if needed, but fetching ensures accuracy
+        const doc = await adminDb.collection("cars").doc(id).get();
+        const car = mapDoc(doc);
+
         revalidatePath("/admin/cars");
         revalidatePath("/");
         return { data: car, error: null };
@@ -63,11 +76,9 @@ export async function updateCar(id: number, data: any) {
     }
 }
 
-export async function deleteCar(id: number) {
+export async function deleteCar(id: string) {
     try {
-        await prisma.car.delete({
-            where: { id },
-        });
+        await adminDb.collection("cars").doc(id).delete();
         revalidatePath("/admin/cars");
         revalidatePath("/");
         return { success: true, error: null };
@@ -81,9 +92,8 @@ export async function deleteCar(id: number) {
 
 export async function getAccessories() {
     try {
-        const items = await prisma.accessory.findMany({
-            orderBy: { createdAt: "desc" },
-        });
+        const snapshot = await adminDb.collection("accessories").orderBy("createdAt", "desc").get();
+        const items = snapshot.docs.map(mapDoc);
         return { data: items, error: null };
     } catch (error) {
         console.error("Error fetching accessories:", error);
@@ -93,12 +103,16 @@ export async function getAccessories() {
 
 export async function createAccessory(data: any) {
     try {
-        const item = await prisma.accessory.create({
-            data: {
-                ...data,
-                price: Number(data.price),
-            },
-        });
+        const itemData = {
+            ...data,
+            price: Number(data.price),
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+        };
+
+        const docRef = await adminDb.collection("accessories").add(itemData);
+        const item = { id: docRef.id, ...itemData };
+
         revalidatePath("/admin/accessories");
         revalidatePath("/");
         return { data: item, error: null };
@@ -108,15 +122,18 @@ export async function createAccessory(data: any) {
     }
 }
 
-export async function updateAccessory(id: number, data: any) {
+export async function updateAccessory(id: string, data: any) {
     try {
-        const item = await prisma.accessory.update({
-            where: { id },
-            data: {
-                ...data,
-                price: data.price ? Number(data.price) : undefined,
-            },
-        });
+        const updateData = {
+            ...data,
+            updatedAt: new Date().toISOString(),
+            price: data.price ? Number(data.price) : undefined,
+        };
+
+        await adminDb.collection("accessories").doc(id).update(updateData);
+        const doc = await adminDb.collection("accessories").doc(id).get();
+        const item = mapDoc(doc);
+
         revalidatePath("/admin/accessories");
         revalidatePath("/");
         return { data: item, error: null };
@@ -126,11 +143,9 @@ export async function updateAccessory(id: number, data: any) {
     }
 }
 
-export async function deleteAccessory(id: number) {
+export async function deleteAccessory(id: string) {
     try {
-        await prisma.accessory.delete({
-            where: { id },
-        });
+        await adminDb.collection("accessories").doc(id).delete();
         revalidatePath("/admin/accessories");
         revalidatePath("/");
         return { success: true, error: null };

@@ -27,7 +27,7 @@ import { uploadImage } from "@/lib/supabase/storage";
 
 // Simple type definition based on Prisma model
 type Accessory = {
-    id: number;
+    id: string;
     name: string;
     price: number;
     image: string;
@@ -127,7 +127,7 @@ export default function AccessoryInventoryClient({
         setLoading(false);
     };
 
-    const handleDelete = async (id: number) => {
+    const handleDelete = async (id: string) => {
         if (confirm("Are you sure you want to delete this accessory?")) {
             const { success, error } = await deleteAccessory(id);
             if (success) {

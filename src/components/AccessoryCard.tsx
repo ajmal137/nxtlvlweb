@@ -8,7 +8,7 @@ import { ShoppingCart } from "lucide-react";
 
 interface AccessoryProps {
     accessory: {
-        id: number;
+        id: string;
         name: string;
         price: number;
         image: string;

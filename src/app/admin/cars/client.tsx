@@ -27,7 +27,7 @@ import { uploadImage } from "@/lib/supabase/storage";
 
 // Simple type definition based on Prisma model
 type Car = {
-    id: number;
+    id: string;
     brand: string;
     model: string;
     year: number;
@@ -137,7 +137,7 @@ export default function CarInventoryClient({ initialCars }: { initialCars: Car[]
         setLoading(false);
     };
 
-    const handleDelete = async (id: number) => {
+    const handleDelete = async (id: string) => {
         if (confirm("Are you sure you want to delete this vehicle?")) {
             const { success, error } = await deleteCar(id);
             if (success) {
