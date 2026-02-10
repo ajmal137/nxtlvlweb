@@ -154,3 +154,34 @@ export async function deleteAccessory(id: string) {
         return { success: false, error: "Failed to delete accessory" };
     }
 }
+
+// --- TEST DRIVES ---
+
+export async function createTestDrive(data: any) {
+    try {
+        const testDriveData = {
+            ...data,
+            createdAt: new Date().toISOString(),
+            status: 'pending', // pending, contacted, completed
+        };
+
+        const docRef = await adminDb.collection("test_drives").add(testDriveData);
+        // We don't need to revalidate public paths usually, but maybe admin dashboard
+        revalidatePath("/admin/test-drives");
+        return { success: true, error: null };
+    } catch (error) {
+        console.error("Error creating test drive request:", error);
+        return { success: false, error: "Failed to submit request" };
+    }
+}
+
+export async function getTestDrives() {
+    try {
+        const snapshot = await adminDb.collection("test_drives").orderBy("createdAt", "desc").get();
+        const items = snapshot.docs.map(mapDoc);
+        return { data: items, error: null };
+    } catch (error) {
+        console.error("Error fetching test drives:", error);
+        return { data: [], error: "Failed to fetch test drives" };
+    }
+}
