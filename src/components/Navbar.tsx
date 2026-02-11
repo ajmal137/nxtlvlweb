@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ShoppingBag, Search, Menu } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import {
@@ -22,6 +23,7 @@ import { useCart } from "@/context/CartContext";
 export default function Navbar() {
     const { user, logout } = useAuth();
     const { itemCount, openCart } = useCart();
+    const router = useRouter();
     return (
         <nav className="sticky top-0 z-50 w-full border-b border-primary/20 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
             <div className="container mx-auto px-4 h-20 flex items-center justify-between">
@@ -64,7 +66,13 @@ export default function Navbar() {
                         variant="ghost"
                         size="icon"
                         className="relative text-white hover:text-primary hover:bg-white/10"
-                        onClick={openCart}
+                        onClick={() => {
+                            if (!user) {
+                                router.push("/login");
+                            } else {
+                                openCart();
+                            }
+                        }}
                     >
                         <ShoppingBag className="h-5 w-5" />
                         {itemCount > 0 && (

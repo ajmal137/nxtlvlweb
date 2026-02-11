@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
@@ -16,9 +17,12 @@ interface AccessoryProps {
 }
 
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 
 export default function AccessoryCard({ accessory }: AccessoryProps) {
     const { addItem } = useCart();
+    const { user } = useAuth();
+    const router = useRouter();
     return (
         <Card className="group overflow-hidden border-white/10 bg-card/50 backdrop-blur-sm hover:border-primary/50 transition-all duration-300">
             <div className="relative aspect-square overflow-hidden bg-background">
@@ -56,12 +60,18 @@ export default function AccessoryCard({ accessory }: AccessoryProps) {
             <CardFooter className="p-4 border-t border-white/10">
                 <Button
                     className="w-full bg-white/5 hover:bg-primary text-white border-0 transition-colors"
-                    onClick={() => addItem({
-                        id: accessory.id,
-                        name: accessory.name,
-                        price: accessory.price,
-                        image: accessory.image
-                    })}
+                    onClick={() => {
+                        if (!user) {
+                            router.push("/login");
+                        } else {
+                            addItem({
+                                id: accessory.id,
+                                name: accessory.name,
+                                price: accessory.price,
+                                image: accessory.image
+                            });
+                        }
+                    }}
                 >
                     Add to Cart
                 </Button>
