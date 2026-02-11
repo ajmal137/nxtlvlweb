@@ -24,6 +24,15 @@ const orbitron = Orbitron({
 export const metadata: Metadata = {
   title: "Next Level | Premium Used Cars & Accessories",
   description: "Experience the future of automotive retail. Premium used cars and high-end accessories.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Next Level",
+  },
+  formatDetection: {
+    telephone: false,
+  },
 };
 
 export default function RootLayout({
