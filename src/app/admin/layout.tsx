@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Car, Package, LogOut, LayoutDashboard, Calendar } from "lucide-react";
+import { Car, Package, LogOut, LayoutDashboard, Calendar, ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -11,6 +11,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     const navItems = [
         { href: "/admin/dashboard", label: "Overview", icon: LayoutDashboard },
+        { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
         { href: "/admin/cars", label: "Car Inventory", icon: Car },
         { href: "/admin/accessories", label: "Accessories", icon: Package },
         { href: "/admin/test-drives", label: "Test Drives", icon: Calendar },

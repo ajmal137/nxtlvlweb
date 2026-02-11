@@ -4,13 +4,24 @@ import Link from "next/link";
 import { ShoppingBag, Search, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { User, LogOut, Package } from "lucide-react";
 
 
 import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
 
 export default function Navbar() {
     const { user, logout } = useAuth();
+    const { itemCount, openCart } = useCart();
     return (
         <nav className="sticky top-0 z-50 w-full border-b border-primary/20 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
             <div className="container mx-auto px-4 h-20 flex items-center justify-between">
@@ -49,8 +60,18 @@ export default function Navbar() {
                     <Button variant="ghost" size="icon" className="text-white hover:text-primary hover:bg-white/10 hidden sm:flex">
                         <Search className="h-5 w-5" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="text-white hover:text-primary hover:bg-white/10">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="relative text-white hover:text-primary hover:bg-white/10"
+                        onClick={openCart}
+                    >
                         <ShoppingBag className="h-5 w-5" />
+                        {itemCount > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold h-4 w-4 flex items-center justify-center rounded-full animate-in zoom-in">
+                                {itemCount}
+                            </span>
+                        )}
                     </Button>
 
                     <div className="md:hidden">
@@ -80,17 +101,36 @@ export default function Navbar() {
                     </div>
 
                     {user ? (
-                        <div className="flex items-center gap-4">
-                            <span className="text-white text-sm hidden md:block">
-                                Hi, <span className="text-primary font-bold">{user.displayName ? user.displayName.split(' ')[0] : 'User'}</span>
-                            </span>
-                            <Button
-                                onClick={() => logout()}
-                                className="hidden md:flex bg-red-500/10 hover:bg-red-500/20 text-red-500 font-bold font-orbitron tracking-wider border-0 uppercase"
-                            >
-                                Sign Out
-                            </Button>
-                        </div>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="flex items-center gap-2 hover:bg-white/10">
+                                    <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center border border-primary/50 text-primary">
+                                        <User className="h-4 w-4" />
+                                    </div>
+                                    <span className="text-white text-sm hidden md:block font-medium">
+                                        {user.displayName ? user.displayName.split(' ')[0] : 'User'}
+                                    </span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-56 bg-card border-white/10 text-white">
+                                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                <DropdownMenuSeparator className="bg-white/10" />
+                                <DropdownMenuItem asChild className="focus:bg-white/10 focus:text-white cursor-pointer">
+                                    <Link href="/my-orders" className="flex items-center gap-2">
+                                        <Package className="h-4 w-4" />
+                                        <span>My Orders</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator className="bg-white/10" />
+                                <DropdownMenuItem
+                                    className="text-red-500 focus:bg-red-500/10 focus:text-red-500 cursor-pointer flex items-center gap-2"
+                                    onClick={() => logout()}
+                                >
+                                    <LogOut className="h-4 w-4" />
+                                    <span>Sign Out</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     ) : (
                         <Link href="/login">
                             <Button className="hidden md:flex bg-primary hover:bg-primary/90 text-primary-foreground font-bold font-orbitron tracking-wider border-0 uppercase">

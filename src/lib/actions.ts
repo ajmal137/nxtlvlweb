@@ -185,3 +185,122 @@ export async function getTestDrives() {
         return { data: [], error: "Failed to fetch test drives" };
     }
 }
+// --- ORDERS ---
+
+export async function createOrder(data: any) {
+    try {
+        const orderData = {
+            ...data,
+            createdAt: new Date().toISOString(),
+            status: 'pending', // pending, processing, completed, cancelled
+            totalAmount: Number(data.totalAmount),
+        };
+
+        const docRef = await adminDb.collection("orders").add(orderData);
+
+        // Optional: Revalidate admin orders page if it exists
+        // revalidatePath("/admin/orders");
+
+        return { success: true, orderId: docRef.id, error: null };
+    } catch (error) {
+        console.error("Error creating order:", error);
+        return { success: false, orderId: null, error: "Failed to place order" };
+    }
+}
+
+export async function getOrders() {
+    try {
+        const snapshot = await adminDb.collection("orders").orderBy("createdAt", "desc").get();
+        const orders = snapshot.docs.map(mapDoc);
+        return { data: orders, error: null };
+    } catch (error) {
+        console.error("Error fetching orders:", error);
+        return { data: [], error: "Failed to fetch orders" };
+    }
+}
+
+export async function getUserOrders(userId: string) {
+    try {
+        const snapshot = await adminDb.collection("orders")
+            .where("userId", "==", userId)
+            // .orderBy("createdAt", "desc") // Requires index, doing in-memory sort instead
+            .get();
+        const orders = snapshot.docs
+            .map(mapDoc)
+            .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+        return { data: orders, error: null };
+    } catch (error) {
+        console.error("Error fetching user orders:", error);
+        return { data: [], error: "Failed to fetch orders" };
+    }
+}
+
+export async function updateOrderStatus(id: string, status: string) {
+    try {
+        await adminDb.collection("orders").doc(id).update({
+            status,
+            updatedAt: new Date().toISOString()
+        });
+        revalidatePath("/admin/orders");
+        return { success: true, error: null };
+    } catch (error) {
+        console.error("Error updating order status:", error);
+        return { success: false, error: "Failed to update order status" };
+    }
+}
+
+export async function deleteOrder(id: string) {
+    try {
+        await adminDb.collection("orders").doc(id).delete();
+        revalidatePath("/admin/orders");
+        return { success: true, error: null };
+    } catch (error) {
+        console.error("Error deleting order:", error);
+        return { success: false, error: "Failed to delete order" };
+    }
+}
+
+// --- DASHBOARD ---
+
+export async function getDashboardStats() {
+    try {
+        const [carsSnap, accessoriesSnap, ordersSnap] = await Promise.all([
+            adminDb.collection("cars").get(),
+            adminDb.collection("accessories").get(),
+            adminDb.collection("orders").get(),
+        ]);
+
+        const totalCars = carsSnap.size;
+        const totalAccessories = accessoriesSnap.size;
+        const totalOrders = ordersSnap.size;
+
+        let inventoryValue = 0;
+        carsSnap.forEach((doc: any) => { inventoryValue += (doc.data().price || 0); });
+        accessoriesSnap.forEach((doc: any) => { inventoryValue += (doc.data().price || 0); });
+
+        // Get recent activity (limit to 5)
+        const recentCars = (await adminDb.collection("cars").orderBy("createdAt", "desc").limit(5).get()).docs.map((doc: any) => ({ ...mapDoc(doc), type: 'car' }));
+        const recentAccessories = (await adminDb.collection("accessories").orderBy("createdAt", "desc").limit(5).get()).docs.map((doc: any) => ({ ...mapDoc(doc), type: 'accessory' }));
+        const recentOrders = (await adminDb.collection("orders").orderBy("createdAt", "desc").limit(5).get()).docs.map((doc: any) => ({ ...mapDoc(doc), type: 'order' }));
+
+        const activity = [...recentCars, ...recentAccessories, ...recentOrders]
+            // @ts-ignore
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            .slice(0, 5);
+
+        return {
+            data: {
+                totalCars,
+                totalAccessories,
+                inventoryValue,
+                totalOrders,
+                activity
+            },
+            error: null
+        };
+    } catch (error) {
+        console.error("Error fetching dashboard stats:", error);
+        return { data: null, error: "Failed to fetch dashboard stats" };
+    }
+}

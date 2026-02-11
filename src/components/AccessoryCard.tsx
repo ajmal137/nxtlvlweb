@@ -15,7 +15,10 @@ interface AccessoryProps {
     };
 }
 
+import { useCart } from "@/context/CartContext";
+
 export default function AccessoryCard({ accessory }: AccessoryProps) {
+    const { addItem } = useCart();
     return (
         <Card className="group overflow-hidden border-white/10 bg-card/50 backdrop-blur-sm hover:border-primary/50 transition-all duration-300">
             <div className="relative aspect-square overflow-hidden bg-background">
@@ -51,7 +54,15 @@ export default function AccessoryCard({ accessory }: AccessoryProps) {
             </CardHeader>
 
             <CardFooter className="p-4 border-t border-white/10">
-                <Button className="w-full bg-white/5 hover:bg-primary text-white border-0 transition-colors">
+                <Button
+                    className="w-full bg-white/5 hover:bg-primary text-white border-0 transition-colors"
+                    onClick={() => addItem({
+                        id: accessory.id,
+                        name: accessory.name,
+                        price: accessory.price,
+                        image: accessory.image
+                    })}
+                >
                     Add to Cart
                 </Button>
             </CardFooter>
