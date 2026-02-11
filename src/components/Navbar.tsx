@@ -5,6 +5,7 @@ import { ShoppingBag, Search, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
+
 import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
 
@@ -15,12 +16,13 @@ export default function Navbar() {
             <div className="container mx-auto px-4 h-20 flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-2">
-                    <div className="relative h-12 w-48">
+                    <div className="relative h-12 w-auto">
                         <Image
-                            src="/logo.jpg"
+                            src="/transparent-logo.png"
                             alt="Next Level Auto Deals & Accessories"
-                            fill
-                            className="object-contain"
+                            width={150}
+                            height={60}
+                            className="object-contain h-full w-auto"
                             priority
                         />
                     </div>

@@ -34,6 +34,16 @@ export default async function Home() {
         </div>
 
         <div className="relative z-10 text-center space-y-6 max-w-4xl px-4 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+          <div className="flex justify-center mb-4">
+            <Image
+              src="/transparent-logo.png"
+              alt="Next Level Logo"
+              width={600}
+              height={240}
+              className="object-contain"
+              priority // High priority as it's above fold
+            />
+          </div>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-white drop-shadow-2xl">
             DRIVE THE <span className="text-primary">FUTURE</span>, TODAY.
           </h1>
