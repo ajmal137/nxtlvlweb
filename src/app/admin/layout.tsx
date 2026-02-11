@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,13 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/s
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
+    const [open, setOpen] = useState(false);
     const isLoginPage = pathname === "/admin/login";
+
+    // Close mobile menu when pathname changes
+    useEffect(() => {
+        setOpen(false);
+    }, [pathname]);
 
     const navItems = [
         { href: "/admin/dashboard", label: "Overview", icon: LayoutDashboard },
@@ -23,7 +30,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         return <div className="min-h-screen bg-background">{children}</div>;
     }
 
-    const NavigationContent = () => (
+    const NavigationContent = ({ onClick }: { onClick?: () => void }) => (
         <>
             <nav className="flex-1 p-4 space-y-2">
                 {navItems.map((item) => {
@@ -31,7 +38,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     const isActive = pathname === item.href;
 
                     return (
-                        <Link key={item.href} href={item.href} className="block">
+                        <Link key={item.href} href={item.href} className="block" onClick={onClick}>
                             <Button
                                 variant="ghost"
                                 className={cn(
@@ -69,7 +76,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="min-h-screen bg-background flex flex-col md:flex-row">
             {/* Mobile Header */}
             <header className="md:hidden flex items-center h-16 px-4 bg-card border-b border-white/10 sticky top-0 z-40">
-                <Sheet>
+                <Sheet open={open} onOpenChange={setOpen}>
                     <SheetTrigger asChild>
                         <Button variant="ghost" size="icon" className="text-white -ml-2">
                             <Menu className="h-6 w-6" />
@@ -83,7 +90,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             </h2>
                         </div>
                         <div className="flex flex-col h-[calc(100%-80px)]">
-                            <NavigationContent />
+                            <NavigationContent onClick={() => setOpen(false)} />
                         </div>
                     </SheetContent>
                 </Sheet>
