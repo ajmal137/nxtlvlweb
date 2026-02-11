@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ShoppingBag, Search, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -82,6 +82,7 @@ export default function Navbar() {
                                 </Button>
                             </SheetTrigger>
                             <SheetContent side="right" className="bg-card/95 border-l-primary/20">
+                                <SheetTitle className="hidden">Navigation Menu</SheetTitle>
                                 <div className="flex flex-col gap-6 mt-10 font-orbitron">
                                     <Link href="#vehicles" className="text-lg font-bold text-white hover:text-primary uppercase">
                                         Vehicles
