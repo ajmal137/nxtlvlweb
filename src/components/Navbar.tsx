@@ -96,6 +96,29 @@ export default function Navbar() {
                                     <Link href="#about" className="text-lg font-bold text-white hover:text-primary uppercase">
                                         About
                                     </Link>
+
+                                    <div className="h-px bg-white/10 my-2" />
+
+                                    {user ? (
+                                        <>
+                                            <Link href="/my-orders" className="text-lg font-bold text-white hover:text-primary uppercase flex items-center gap-2">
+                                                <Package className="h-5 w-5" />
+                                                My Orders
+                                            </Link>
+                                            <button
+                                                onClick={() => logout()}
+                                                className="text-lg font-bold text-red-500 hover:text-red-400 uppercase flex items-center gap-2 text-left"
+                                            >
+                                                <LogOut className="h-5 w-5" />
+                                                Sign Out
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <Link href="/login" className="text-lg font-bold text-primary hover:text-primary/80 uppercase flex items-center gap-2">
+                                            <User className="h-5 w-5" />
+                                            Sign In
+                                        </Link>
+                                    )}
                                 </div>
                             </SheetContent>
                         </Sheet>
