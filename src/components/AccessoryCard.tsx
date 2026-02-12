@@ -89,7 +89,7 @@ export default function AccessoryCard({ accessory }: AccessoryProps) {
                                 <LayoutGrid className="h-3 w-3" /> Quick View
                             </Badge>
                         </DialogTrigger>
-                        <DialogContent className="bg-card border-white/10 text-white sm:max-w-2xl overflow-hidden">
+                        <DialogContent className="bg-card border-white/10 text-white sm:max-w-2xl overflow-y-auto max-h-[calc(100vh-6rem)] top-20 translate-y-0">
                             <DialogHeader>
                                 <DialogTitle className="text-2xl font-bold font-orbitron">{accessory.name}</DialogTitle>
                                 <DialogDescription className="text-muted-foreground">

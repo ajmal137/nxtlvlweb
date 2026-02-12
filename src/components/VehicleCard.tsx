@@ -122,7 +122,7 @@ export default function VehicleCard({ vehicle }: VehicleProps) {
                             Details
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-card border-white/10 text-white sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+                    <DialogContent className="bg-card border-white/10 text-white sm:max-w-[600px] max-h-[calc(100vh-6rem)] overflow-y-auto top-20 translate-y-0">
                         <DialogHeader>
                             <DialogTitle className="text-2xl font-bold">
                                 {vehicle.brand} {vehicle.model}
