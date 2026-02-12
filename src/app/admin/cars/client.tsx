@@ -22,6 +22,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Plus, Pencil, Trash2, Upload, ImageIcon } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import { createCar, updateCar, deleteCar } from "@/lib/actions";
 import { uploadImage } from "@/lib/firebase/storage";
 
@@ -34,6 +35,7 @@ type Car = {
     price: number;
     mileage: number;
     image: string;
+    details?: string;
     specs?: any;
 };
 
@@ -54,6 +56,7 @@ export default function CarInventoryClient({ initialCars }: { initialCars: Car[]
         price: 0,
         mileage: 0,
         image: "",
+        details: "",
     });
 
     const handleOpenDialog = (car?: Car) => {
@@ -68,6 +71,7 @@ export default function CarInventoryClient({ initialCars }: { initialCars: Car[]
                 price: car.price,
                 mileage: car.mileage,
                 image: car.image,
+                details: car.details || "",
             });
             setPreviewUrl(car.image);
         } else {
@@ -79,6 +83,7 @@ export default function CarInventoryClient({ initialCars }: { initialCars: Car[]
                 price: 0,
                 mileage: 0,
                 image: "",
+                details: "",
             });
         }
         setIsDialogOpen(true);
@@ -316,6 +321,20 @@ export default function CarInventoryClient({ initialCars }: { initialCars: Car[]
                                 }
                                 className="col-span-3 bg-background/50 border-white/10"
                                 required
+                            />
+                        </div>
+                        <div className="grid grid-cols-4 items-start gap-4">
+                            <Label htmlFor="details" className="text-right text-white pt-2">
+                                Details
+                            </Label>
+                            <Textarea
+                                id="details"
+                                value={formData.details}
+                                onChange={(e) =>
+                                    setFormData({ ...formData, details: e.target.value })
+                                }
+                                className="col-span-3 bg-background/50 border-white/10 min-h-[100px]"
+                                placeholder="Enter vehicle description, features, and other details..."
                             />
                         </div>
                         <div className="grid grid-cols-4 items-start gap-4">

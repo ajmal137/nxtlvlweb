@@ -17,6 +17,7 @@ interface VehicleProps {
         price: number;
         mileage: number;
         image: string;
+        details?: string;
         specs: {
             acceleration?: string;
             topSpeed?: string;
@@ -29,12 +30,13 @@ interface VehicleProps {
 
 import { useState } from "react";
 import { createTestDrive } from "@/lib/actions";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2, Info } from "lucide-react";
 
 export default function VehicleCard({ vehicle }: VehicleProps) {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [open, setOpen] = useState(false);
+    const [detailsOpen, setDetailsOpen] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -114,9 +116,101 @@ export default function VehicleCard({ vehicle }: VehicleProps) {
             </CardContent>
 
             <CardFooter className="p-4 border-t border-white/10 flex gap-2">
-                <Button variant="outline" className="flex-1 border-white/10 hover:bg-white/5 hover:text-white">
-                    Details
-                </Button>
+                <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
+                    <DialogTrigger asChild>
+                        <Button variant="outline" className="flex-1 border-white/10 hover:bg-white/5 hover:text-white">
+                            Details
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="bg-card border-white/10 text-white sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+                        <DialogHeader>
+                            <DialogTitle className="text-2xl font-bold">
+                                {vehicle.brand} {vehicle.model}
+                                <span className="ml-2 text-primary">({vehicle.year})</span>
+                            </DialogTitle>
+                            <DialogDescription className="text-primary font-bold text-lg">
+                                ₹{vehicle.price.toLocaleString('en-IN')}
+                            </DialogDescription>
+                        </DialogHeader>
+
+                        <div className="space-y-6 py-4">
+                            <div className="relative aspect-video rounded-xl overflow-hidden border border-white/10">
+                                <Image
+                                    src={vehicle.image}
+                                    alt={vehicle.model}
+                                    fill
+                                    className="object-cover"
+                                    unoptimized={vehicle.image.includes('supabase.co')}
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                <div className="bg-white/5 p-3 rounded-lg border border-white/5">
+                                    <p className="text-xs text-muted-foreground uppercase">Mileage</p>
+                                    <p className="font-bold flex items-center gap-2">
+                                        <Gauge className="w-4 h-4 text-primary" />
+                                        {vehicle.mileage.toLocaleString('en-IN')} mi
+                                    </p>
+                                </div>
+                                <div className="bg-white/5 p-3 rounded-lg border border-white/5">
+                                    <p className="text-xs text-muted-foreground uppercase">Year</p>
+                                    <p className="font-bold flex items-center gap-2">
+                                        <Calendar className="w-4 h-4 text-primary" />
+                                        {vehicle.year}
+                                    </p>
+                                </div>
+                                {vehicle.specs.topSpeed && (
+                                    <div className="bg-white/5 p-3 rounded-lg border border-white/5">
+                                        <p className="text-xs text-muted-foreground uppercase">Top Speed</p>
+                                        <p className="font-bold flex items-center gap-2">
+                                            <Navigation className="w-4 h-4 text-primary" />
+                                            {vehicle.specs.topSpeed}
+                                        </p>
+                                    </div>
+                                )}
+                                {vehicle.specs.acceleration && (
+                                    <div className="bg-white/5 p-3 rounded-lg border border-white/5">
+                                        <p className="text-xs text-muted-foreground uppercase">0-60 mph</p>
+                                        <p className="font-bold flex items-center gap-2">
+                                            <Fuel className="w-4 h-4 text-primary" />
+                                            {vehicle.specs.acceleration}
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="space-y-3">
+                                <h3 className="text-lg font-bold flex items-center gap-2">
+                                    <Info className="w-5 h-5 text-primary" />
+                                    Vehicle Details
+                                </h3>
+                                <div className="bg-white/5 p-6 rounded-xl border border-white/5">
+                                    {vehicle.details ? (
+                                        <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">
+                                            {vehicle.details}
+                                        </p>
+                                    ) : (
+                                        <p className="text-muted-foreground italic">No additional details provided for this vehicle.</p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <DialogFooter className="flex gap-2 sm:justify-between items-center sm:flex-row flex-col">
+                            <p className="text-xs text-muted-foreground">Prices subject to change. Contact for confirmation.</p>
+                            <Button
+                                className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground font-bold"
+                                onClick={() => {
+                                    setDetailsOpen(false);
+                                    setOpen(true);
+                                }}
+                            >
+                                Schedule Test Drive
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
                 <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger asChild>
                         <Button className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground border-0">
