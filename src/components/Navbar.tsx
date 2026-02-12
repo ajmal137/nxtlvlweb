@@ -25,7 +25,7 @@ export default function Navbar() {
     const { itemCount, openCart } = useCart();
     const router = useRouter();
     return (
-        <nav className="sticky top-0 z-50 w-full border-b border-primary/20 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
+        <nav className="sticky top-0 z-[60] w-full border-b border-primary/20 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
             <div className="container mx-auto px-4 h-20 flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-2">
