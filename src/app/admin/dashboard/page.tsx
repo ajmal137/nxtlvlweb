@@ -93,11 +93,13 @@ export default function AdminDashboard() {
                                                 {item.type === 'car' && 'New Vehicle Added'}
                                                 {item.type === 'accessory' && 'New Accessory Added'}
                                                 {item.type === 'order' && 'New Order Placed'}
+                                                {item.type === 'test-drive' && 'Test Drive Requested'}
                                             </p>
                                             <p className="text-sm text-muted-foreground">
-                                                {item.type === 'car' && `${item.year} ${item.make} ${item.model}`}
+                                                {item.type === 'car' && `${item.year} ${item.brand || ''} ${item.model}`}
                                                 {item.type === 'accessory' && item.name}
-                                                {item.type === 'order' && `Order #${item.id.slice(0, 8)} by ${item.customerName}`}
+                                                {item.type === 'order' && `Order #${item.id.slice(0, 8)} by ${item.customerName || 'Unknown'}`}
+                                                {item.type === 'test-drive' && `${item.vehicleModel} by ${item.name}`}
                                             </p>
                                         </div>
                                         <div className="ml-auto font-medium text-primary">

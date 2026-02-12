@@ -96,7 +96,7 @@ export default function SignupPage() {
                             />
                         </div>
                         {error && <p className="text-sm text-red-500 text-center">{error}</p>}
-                        <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-white" disabled={loading}>
+                        <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" disabled={loading}>
                             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Sign Up"}
                         </Button>
                     </form>

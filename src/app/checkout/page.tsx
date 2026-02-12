@@ -90,7 +90,7 @@ export default function CheckoutPage() {
                         </p>
                     </div>
                     <div className="pt-4">
-                        <Button asChild className="w-full bg-primary hover:bg-primary/90 text-white" size="lg">
+                        <Button asChild className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" size="lg">
                             <Link href="/">
                                 Return to Home
                             </Link>
@@ -217,7 +217,7 @@ export default function CheckoutPage() {
                         <Button
                             type="submit"
                             form="checkout-form"
-                            className="w-full mt-8 bg-primary hover:bg-primary/90 text-white font-bold h-12 text-lg"
+                            className="w-full mt-8 bg-primary hover:bg-primary/90 text-primary-foreground font-bold h-12 text-lg"
                             disabled={isSubmitting}
                         >
                             {isSubmitting ? (

@@ -283,8 +283,9 @@ export async function getDashboardStats() {
         const recentCars = (await adminDb.collection("cars").orderBy("createdAt", "desc").limit(5).get()).docs.map((doc: any) => ({ ...mapDoc(doc), type: 'car' }));
         const recentAccessories = (await adminDb.collection("accessories").orderBy("createdAt", "desc").limit(5).get()).docs.map((doc: any) => ({ ...mapDoc(doc), type: 'accessory' }));
         const recentOrders = (await adminDb.collection("orders").orderBy("createdAt", "desc").limit(5).get()).docs.map((doc: any) => ({ ...mapDoc(doc), type: 'order' }));
+        const recentTestDrives = (await adminDb.collection("test_drives").orderBy("createdAt", "desc").limit(5).get()).docs.map((doc: any) => ({ ...mapDoc(doc), type: 'test-drive' }));
 
-        const activity = [...recentCars, ...recentAccessories, ...recentOrders]
+        const activity = [...recentCars, ...recentAccessories, ...recentOrders, ...recentTestDrives]
             // @ts-ignore
             .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
             .slice(0, 5);

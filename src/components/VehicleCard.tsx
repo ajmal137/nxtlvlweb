@@ -119,7 +119,7 @@ export default function VehicleCard({ vehicle }: VehicleProps) {
                 </Button>
                 <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger asChild>
-                        <Button className="flex-1 bg-primary hover:bg-primary/90 text-white border-0">
+                        <Button className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground border-0">
                             Test Drive
                         </Button>
                     </DialogTrigger>
@@ -181,7 +181,7 @@ export default function VehicleCard({ vehicle }: VehicleProps) {
                                     </div>
                                 </div>
                                 <DialogFooter>
-                                    <Button type="submit" className="bg-primary text-white hover:bg-primary/90" disabled={loading}>
+                                    <Button type="submit" className="bg-primary text-primary-foreground hover:bg-primary/90" disabled={loading}>
                                         {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                                         Schedule Now
                                     </Button>

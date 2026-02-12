@@ -10,12 +10,30 @@ import { ArrowRight, ChevronDown } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
-export default async function Home() {
+export default async function Home(props: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const searchParams = await props.searchParams;
   const { data: carsData } = await getCars();
   const { data: accessoriesData } = await getAccessories();
 
-  const cars = carsData || [];
+  const allCars = carsData || [];
   const accessories = accessoriesData || [];
+
+  // Calculate dynamic filter values
+  const maxPrice = allCars.length > 0 ? Math.max(...allCars.map(c => c.price)) : 500000;
+  const uniqueBrands = Array.from(new Set(allCars.map(c => c.brand))).sort();
+
+  // Apply filters
+  const selectedBrand = searchParams.brand as string | undefined;
+  const minPrice = Number(searchParams.minPrice) || 0;
+  const maxPriceFilter = Number(searchParams.maxPrice) || maxPrice;
+
+  const cars = allCars.filter(car => {
+    const matchesBrand = !selectedBrand || car.brand === selectedBrand;
+    const matchesPrice = car.price >= minPrice && car.price <= maxPriceFilter;
+    return matchesBrand && matchesPrice;
+  });
 
 
   return (
@@ -34,7 +52,7 @@ export default async function Home() {
         </div>
 
         <div className="relative z-10 text-center space-y-6 max-w-4xl px-4 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          <div className="flex justify-center mb-4">
+          <div className="hidden md:flex justify-center mb-4">
             <Image
               src="/transparent-logo.png"
               alt="Next Level Logo"
@@ -51,7 +69,7 @@ export default async function Home() {
             Experience the pinnacle of automotive engineering. Curated collection of premium vehicles and exclusive accessories.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white text-lg px-8 h-14 rounded-full" asChild>
+            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 h-14 rounded-full" asChild>
               <Link href="#vehicles">
                 Browse Vehicles <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
@@ -69,42 +87,13 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Dual Category Entry */}
-      <section className="py-20 px-4 container mx-auto">
-        <div className="grid md:grid-cols-2 gap-8">
-          <Link href="#vehicles" className="group relative h-80 rounded-2xl overflow-hidden border border-white/10">
-            <Image
-              src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2070&auto=format&fit=crop"
-              alt="Premium Vehicles"
-              fill
-              className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-8">
-              <h3 className="text-3xl font-bold text-white mb-2 group-hover:text-primary transition-colors">Premium Vehicles</h3>
-              <p className="text-white/70">Explore our curated inventory of high-performance cars.</p>
-            </div>
-          </Link>
-          <Link href="#accessories" className="group relative h-80 rounded-2xl overflow-hidden border border-white/10">
-            <Image
-              src="https://images.unsplash.com/photo-1632823471367-938b8c5ccff5?q=80&w=2070&auto=format&fit=crop"
-              alt="Auto Accessories"
-              fill
-              className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-8">
-              <h3 className="text-3xl font-bold text-white mb-2 group-hover:text-primary transition-colors">Auto Accessories</h3>
-              <p className="text-white/70">Upgrade your ride with top-tier parts and gadgets.</p>
-            </div>
-          </Link>
-        </div>
-      </section>
 
       {/* Vehicles Section */}
       <section id="vehicles" className="py-20 bg-background/50 border-t border-white/5">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-12">
             <aside className="w-full md:w-1/4">
-              <CarFilters />
+              <CarFilters maxPrice={maxPrice} brands={uniqueBrands} />
             </aside>
             <div className="w-full md:w-3/4">
               <div className="flex justify-between items-center mb-8">
@@ -122,6 +111,29 @@ export default async function Home() {
                 </Button>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+
+      {/* Accessories Section */}
+      <section id="accessories" className="py-20 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col items-center mb-12">
+            <h2 className="text-4xl font-bold text-white mb-4">Trending Accessories</h2>
+            <p className="text-muted-foreground text-center max-w-2xl">
+              Discover our most popular upgrades and essentials for your vehicle.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {accessories.slice(0, 8).map((accessory: any) => (
+              <AccessoryCard key={accessory.id} accessory={accessory} />
+            ))}
+          </div>
+          <div className="mt-12 flex justify-center">
+            <Button variant="ghost" className="text-white hover:text-primary hover:bg-white/5 gap-2">
+              Browse All Accessories <ArrowRight className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       </section>
@@ -151,28 +163,6 @@ export default async function Home() {
             <div className="w-full max-w-md mx-auto">
               <FinanceCalculator />
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Accessories Section */}
-      <section id="accessories" className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col items-center mb-12">
-            <h2 className="text-4xl font-bold text-white mb-4">Trending Accessories</h2>
-            <p className="text-muted-foreground text-center max-w-2xl">
-              Discover our most popular upgrades and essentials for your vehicle.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {accessories.slice(0, 8).map((accessory: any) => (
-              <AccessoryCard key={accessory.id} accessory={accessory} />
-            ))}
-          </div>
-          <div className="mt-12 flex justify-center">
-            <Button variant="ghost" className="text-white hover:text-primary hover:bg-white/5 gap-2">
-              Browse All Accessories <ArrowRight className="h-4 w-4" />
-            </Button>
           </div>
         </div>
       </section>
