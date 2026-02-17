@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext";
 import CartSheet from "@/components/CartSheet";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -51,6 +52,7 @@ export default function RootLayout({
             <main className="flex-1 flex flex-col">
               {children}
             </main>
+            <Footer />
             <CartSheet />
           </CartProvider>
         </AuthProvider>

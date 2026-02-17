@@ -10,8 +10,11 @@ import { createOrder } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { CheckCircle2, ArrowRight, Loader2 } from "lucide-react";
+import { CheckCircle2, ArrowRight, Loader2, CreditCard, Banknote } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+
+// Simple divs used for selection instead of RadioGroup to be faster and cleaner without installing radix
+import { cn } from "@/lib/utils";
 
 export default function CheckoutPage() {
     const { items, total, clearCart } = useCart();
@@ -27,6 +30,8 @@ export default function CheckoutPage() {
         address: "",
         pincode: "",
     });
+
+    const [paymentMethod, setPaymentMethod] = useState<'CASH' | 'UPI'>('CASH');
 
     // Redirect if cart is empty and not just placed an order
     useEffect(() => {
@@ -56,9 +61,14 @@ export default function CheckoutPage() {
                 })),
                 totalAmount: total,
                 userId: user?.uid || null,
+                paymentMethod,
             });
 
             if (result.success && result.orderId) {
+                if (paymentMethod === 'UPI') {
+                    router.push(`/checkout/payment/${result.orderId}`);
+                    return;
+                }
                 setOrderId(result.orderId);
                 setOrderSuccess(true);
                 clearCart();
@@ -165,6 +175,36 @@ export default function CheckoutPage() {
                                     className="bg-white/5 border-white/10 text-white focus:border-primary"
                                 />
                             </div>
+
+                            <div className="space-y-4 pt-4 border-t border-white/10">
+                                <Label className="text-white">Payment Method</Label>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div
+                                        onClick={() => setPaymentMethod('CASH')}
+                                        className={cn(
+                                            "cursor-pointer border rounded-lg p-4 flex flex-col items-center justify-center gap-2 transition-all",
+                                            paymentMethod === 'CASH'
+                                                ? "bg-primary/20 border-primary text-primary"
+                                                : "bg-white/5 border-white/10 text-muted-foreground hover:bg-white/10"
+                                        )}
+                                    >
+                                        <Banknote className="h-6 w-6" />
+                                        <span className="font-medium">Cash on Delivery</span>
+                                    </div>
+                                    <div
+                                        onClick={() => setPaymentMethod('UPI')}
+                                        className={cn(
+                                            "cursor-pointer border rounded-lg p-4 flex flex-col items-center justify-center gap-2 transition-all",
+                                            paymentMethod === 'UPI'
+                                                ? "bg-primary/20 border-primary text-primary"
+                                                : "bg-white/5 border-white/10 text-muted-foreground hover:bg-white/10"
+                                        )}
+                                    >
+                                        <CreditCard className="h-6 w-6" />
+                                        <span className="font-medium">UPI Payment</span>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -233,7 +273,7 @@ export default function CheckoutPage() {
                         </Button>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }

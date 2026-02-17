@@ -53,6 +53,8 @@ export default function MyOrdersPage() {
     const getStatusColor = (status: string) => {
         switch (status) {
             case "pending": return "bg-yellow-500/20 text-yellow-500 border-yellow-500/50";
+            case "pending_payment": return "bg-orange-500/20 text-orange-500 border-orange-500/50";
+            case "payment_pending_confirmation": return "bg-purple-500/20 text-purple-500 border-purple-500/50";
             case "processing": return "bg-blue-500/20 text-blue-500 border-blue-500/50";
             case "completed": return "bg-green-500/20 text-green-500 border-green-500/50";
             case "cancelled": return "bg-red-500/20 text-red-500 border-red-500/50";
@@ -120,73 +122,82 @@ export default function MyOrdersPage() {
                                     </TableCell>
                                     <TableCell>
                                         <Badge variant="outline" className={getStatusColor(order.status)}>
-                                            {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                                            {order.status === 'pending_payment' ? 'Pending Payment' :
+                                                order.status === 'payment_pending_confirmation' ? 'Waiting Confirmation' :
+                                                    order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                                         </Badge>
                                     </TableCell>
                                     <TableCell className="text-right">
-                                        <Dialog>
-                                            <DialogTrigger asChild>
-                                                <Button variant="ghost" size="icon" className="hover:bg-white/10 hover:text-primary">
-                                                    <Eye className="h-4 w-4" />
+                                        <div className="flex justify-end gap-2 items-center">
+                                            {order.status === 'pending_payment' && (
+                                                <Button asChild size="sm" className="bg-green-600 hover:bg-green-700 text-white h-8">
+                                                    <Link href={`/checkout/payment/${order.id}`}>Pay Now</Link>
                                                 </Button>
-                                            </DialogTrigger>
-                                            <DialogContent className="max-w-md bg-card border-white/10 text-white">
-                                                <DialogHeader>
-                                                    <DialogTitle className="text-xl font-orbitron">Order Details</DialogTitle>
-                                                    <DialogDescription className="text-muted-foreground">
-                                                        #{order.id.slice(0, 8)} • {format(new Date(order.createdAt), "PPP")}
-                                                    </DialogDescription>
-                                                </DialogHeader>
+                                            )}
+                                            <Dialog>
+                                                <DialogTrigger asChild>
+                                                    <Button variant="ghost" size="icon" className="hover:bg-white/10 hover:text-primary">
+                                                        <Eye className="h-4 w-4" />
+                                                    </Button>
+                                                </DialogTrigger>
+                                                <DialogContent className="max-w-md bg-card border-white/10 text-white">
+                                                    <DialogHeader>
+                                                        <DialogTitle className="text-xl font-orbitron">Order Details</DialogTitle>
+                                                        <DialogDescription className="text-muted-foreground">
+                                                            #{order.id.slice(0, 8)} • {format(new Date(order.createdAt), "PPP")}
+                                                        </DialogDescription>
+                                                    </DialogHeader>
 
-                                                <div className="space-y-6 mt-4">
-                                                    {/* Items */}
-                                                    <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
-                                                        {order.items.map((item: any) => (
-                                                            <div key={item.id} className="flex gap-3 items-center bg-white/5 p-2 rounded-md">
-                                                                <div className="relative h-12 w-12 rounded overflow-hidden flex-shrink-0 bg-background">
-                                                                    <Image
-                                                                        src={item.image}
-                                                                        alt={item.name}
-                                                                        fill
-                                                                        className="object-cover"
-                                                                        unoptimized={item.image.includes('supabase.co')}
-                                                                    />
-                                                                </div>
-                                                                <div className="flex-1 min-w-0">
-                                                                    <p className="text-sm font-medium truncate">{item.name}</p>
-                                                                    <p className="text-xs text-muted-foreground">
-                                                                        Qty: {item.quantity}
+                                                    <div className="space-y-6 mt-4">
+                                                        {/* Items */}
+                                                        <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+                                                            {order.items.map((item: any) => (
+                                                                <div key={item.id} className="flex gap-3 items-center bg-white/5 p-2 rounded-md">
+                                                                    <div className="relative h-12 w-12 rounded overflow-hidden flex-shrink-0 bg-background">
+                                                                        <Image
+                                                                            src={item.image}
+                                                                            alt={item.name}
+                                                                            fill
+                                                                            className="object-cover"
+                                                                            unoptimized={item.image.includes('supabase.co')}
+                                                                        />
+                                                                    </div>
+                                                                    <div className="flex-1 min-w-0">
+                                                                        <p className="text-sm font-medium truncate">{item.name}</p>
+                                                                        <p className="text-xs text-muted-foreground">
+                                                                            Qty: {item.quantity}
+                                                                        </p>
+                                                                    </div>
+                                                                    <p className="text-sm font-bold">
+                                                                        ₹{(item.price * item.quantity).toLocaleString('en-IN')}
                                                                     </p>
                                                                 </div>
-                                                                <p className="text-sm font-bold">
-                                                                    ₹{(item.price * item.quantity).toLocaleString('en-IN')}
-                                                                </p>
-                                                            </div>
-                                                        ))}
-                                                    </div>
+                                                            ))}
+                                                        </div>
 
-                                                    {/* Address */}
-                                                    <div className="space-y-2">
-                                                        <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-                                                            <MapPin className="h-3 w-3" /> Delivery Address
-                                                        </h3>
-                                                        <p className="text-sm bg-white/5 p-3 rounded-md whitespace-pre-wrap">
-                                                            {order.address}
-                                                            <br />
-                                                            <span className="text-muted-foreground">PIN:</span> {order.pincode}
-                                                        </p>
-                                                    </div>
+                                                        {/* Address */}
+                                                        <div className="space-y-2">
+                                                            <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                                                                <MapPin className="h-3 w-3" /> Delivery Address
+                                                            </h3>
+                                                            <p className="text-sm bg-white/5 p-3 rounded-md whitespace-pre-wrap">
+                                                                {order.address}
+                                                                <br />
+                                                                <span className="text-muted-foreground">PIN:</span> {order.pincode}
+                                                            </p>
+                                                        </div>
 
-                                                    {/* Total */}
-                                                    <div className="flex justify-between items-center pt-4 border-t border-white/10">
-                                                        <span className="font-medium">Total Amount</span>
-                                                        <span className="text-xl font-bold text-primary">
-                                                            ₹{order.totalAmount.toLocaleString('en-IN')}
-                                                        </span>
+                                                        {/* Total */}
+                                                        <div className="flex justify-between items-center pt-4 border-t border-white/10">
+                                                            <span className="font-medium">Total Amount</span>
+                                                            <span className="text-xl font-bold text-primary">
+                                                                ₹{order.totalAmount.toLocaleString('en-IN')}
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </DialogContent>
-                                        </Dialog>
+                                                </DialogContent>
+                                            </Dialog>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             ))

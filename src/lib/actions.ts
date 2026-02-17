@@ -192,19 +192,34 @@ export async function createOrder(data: any) {
         const orderData = {
             ...data,
             createdAt: new Date().toISOString(),
-            status: 'pending', // pending, processing, completed, cancelled
+            // Set initial status based on payment method
+            status: data.paymentMethod === 'UPI' ? 'pending_payment' : 'pending',
             totalAmount: Number(data.totalAmount),
+            paymentMethod: data.paymentMethod || 'CASH', // 'CASH' or 'UPI'
         };
 
         const docRef = await adminDb.collection("orders").add(orderData);
 
         // Optional: Revalidate admin orders page if it exists
-        // revalidatePath("/admin/orders");
+        revalidatePath("/admin/orders");
 
         return { success: true, orderId: docRef.id, error: null };
     } catch (error) {
         console.error("Error creating order:", error);
         return { success: false, orderId: null, error: "Failed to place order" };
+    }
+}
+
+export async function getOrder(id: string) {
+    try {
+        const doc = await adminDb.collection("orders").doc(id).get();
+        if (!doc.exists) {
+            return { data: null, error: "Order not found" };
+        }
+        return { data: mapDoc(doc), error: null };
+    } catch (error) {
+        console.error("Error fetching order:", error);
+        return { data: null, error: "Failed to fetch order" };
     }
 }
 
@@ -303,5 +318,32 @@ export async function getDashboardStats() {
     } catch (error) {
         console.error("Error fetching dashboard stats:", error);
         return { data: null, error: "Failed to fetch dashboard stats" };
+    }
+}
+
+// --- SETTINGS ---
+
+export async function getSettings() {
+    try {
+        const doc = await adminDb.collection("settings").doc("general").get();
+        if (!doc.exists) {
+            return { data: {}, error: null };
+        }
+        return { data: doc.data(), error: null };
+    } catch (error) {
+        console.error("Error fetching settings:", error);
+        return { data: null, error: "Failed to fetch settings" };
+    }
+}
+
+export async function updateSettings(data: any) {
+    try {
+        await adminDb.collection("settings").doc("general").set(data, { merge: true });
+        revalidatePath("/admin/dashboard");
+        revalidatePath("/checkout");
+        return { success: true, error: null };
+    } catch (error) {
+        console.error("Error updating settings:", error);
+        return { success: false, error: "Failed to update settings" };
     }
 }

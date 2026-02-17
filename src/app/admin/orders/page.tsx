@@ -80,6 +80,8 @@ export default function AdminOrdersPage() {
     const getStatusColor = (status: string) => {
         switch (status) {
             case "pending": return "bg-yellow-500/20 text-yellow-500 border-yellow-500/50";
+            case "pending_payment": return "bg-orange-500/20 text-orange-500 border-orange-500/50";
+            case "payment_pending_confirmation": return "bg-purple-500/20 text-purple-500 border-purple-500/50";
             case "processing": return "bg-blue-500/20 text-blue-500 border-blue-500/50";
             case "completed": return "bg-green-500/20 text-green-500 border-green-500/50";
             case "cancelled": return "bg-red-500/20 text-red-500 border-red-500/50";
@@ -147,6 +149,8 @@ export default function AdminOrdersPage() {
                                             </SelectTrigger>
                                             <SelectContent className="bg-card border-white/10">
                                                 <SelectItem value="pending">Pending</SelectItem>
+                                                <SelectItem value="pending_payment">Pending Payment</SelectItem>
+                                                <SelectItem value="payment_pending_confirmation">Waiting Confirmation</SelectItem>
                                                 <SelectItem value="processing">Processing</SelectItem>
                                                 <SelectItem value="completed">Completed</SelectItem>
                                                 <SelectItem value="cancelled">Cancelled</SelectItem>

@@ -1,26 +1,51 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Car, Package, DollarSign, Users } from "lucide-react";
-import { getDashboardStats } from "@/lib/actions";
+import { Car, Package, DollarSign, Users, Settings, Save } from "lucide-react";
+import { getDashboardStats, getSettings, updateSettings } from "@/lib/actions";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 
 export default function AdminDashboard() {
     const [stats, setStats] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [upiId, setUpiId] = useState("");
+    const [savingSettings, setSavingSettings] = useState(false);
 
     useEffect(() => {
-        const fetchStats = async () => {
-            const { data, error } = await getDashboardStats();
-            if (data) {
-                setStats(data);
+        const fetchData = async () => {
+            const [statsRes, settingsRes] = await Promise.all([
+                getDashboardStats(),
+                getSettings()
+            ]);
+
+            if (statsRes.data) {
+                setStats(statsRes.data);
             } else {
-                console.error(error);
+                console.error(statsRes.error);
             }
+
+            if (settingsRes.data && settingsRes.data.upiId) {
+                setUpiId(settingsRes.data.upiId);
+            }
+
             setLoading(false);
         };
-        fetchStats();
+        fetchData();
     }, []);
+
+    const handleSaveSettings = async () => {
+        setSavingSettings(true);
+        const result = await updateSettings({ upiId });
+        if (result.success) {
+            alert("Settings saved successfully!");
+        } else {
+            alert("Failed to save settings.");
+        }
+        setSavingSettings(false);
+    };
 
     if (loading) {
         return <div className="p-8 text-white">Loading dashboard stats...</div>;
@@ -77,6 +102,41 @@ export default function AdminDashboard() {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                <Card className="col-span-3 bg-card/50 border-white/10 backdrop-blur-sm">
+                    <CardHeader>
+                        <CardTitle className="text-white flex items-center gap-2">
+                            <Settings className="h-4 w-4 text-primary" />
+                            Payment Settings
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="upiId" className="text-white">UPI ID (for QR Code)</Label>
+                                <div className="flex gap-2">
+                                    <Input
+                                        id="upiId"
+                                        value={upiId}
+                                        onChange={(e) => setUpiId(e.target.value)}
+                                        placeholder="merchant@upi"
+                                        className="bg-white/5 border-white/10 text-white"
+                                    />
+                                    <Button
+                                        onClick={handleSaveSettings}
+                                        disabled={savingSettings}
+                                        className="bg-primary text-primary-foreground"
+                                    >
+                                        {savingSettings ? <span className="animate-spin">⌛</span> : <Save className="h-4 w-4" />}
+                                    </Button>
+                                </div>
+                                <p className="text-xs text-muted-foreground">
+                                    This UPI ID will be used to generate QR codes for customer payments.
+                                </p>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+
                 <Card className="col-span-4 bg-card/50 border-white/10 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle className="text-white">Recent Activity</CardTitle>
