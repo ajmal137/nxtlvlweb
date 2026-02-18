@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,10 +10,23 @@ import { createOrder } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { CheckCircle2, ArrowRight, Loader2, CreditCard, Banknote } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { CheckCircle2, ArrowRight, Loader2, CreditCard, Banknote, MapPin } from "lucide-react";
 
-// Simple divs used for selection instead of RadioGroup to be faster and cleaner without installing radix
+import { useAuth } from "@/context/AuthContext";
+import dynamic from "next/dynamic";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+
+const LocationPicker = dynamic(() => import('@/components/LocationPicker'), {
+    ssr: false,
+    loading: () => <div className="h-[400px] w-full bg-white/5 animate-pulse rounded-md" />
+});
 import { cn } from "@/lib/utils";
 
 export default function CheckoutPage() {
@@ -22,13 +35,17 @@ export default function CheckoutPage() {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [orderSuccess, setOrderSuccess] = useState(false);
+
     const [orderId, setOrderId] = useState<string | null>(null);
+    const [isMapOpen, setIsMapOpen] = useState(false);
+    const [tempLocation, setTempLocation] = useState<{ lat: number, lng: number } | null>(null);
 
     const [formData, setFormData] = useState({
         customerName: user?.displayName || "",
         phone: "",
         address: "",
         pincode: "",
+        locationLink: "",
     });
 
     const [paymentMethod, setPaymentMethod] = useState<'CASH' | 'UPI'>('CASH');
@@ -44,6 +61,12 @@ export default function CheckoutPage() {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
+
+    const handleLocationSelect = useCallback((lat: number, lng: number) => {
+        setTempLocation({ lat, lng });
+    }, []);
+
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -174,6 +197,64 @@ export default function CheckoutPage() {
                                     placeholder="679334"
                                     className="bg-white/5 border-white/10 text-white focus:border-primary"
                                 />
+                            </div>
+
+                            <div className="space-y-2 pt-2">
+                                <Label htmlFor="locationLink" className="text-white">Delivery Location (Optional)</Label>
+                                <div className="flex gap-2">
+                                    <Input
+                                        id="locationLink"
+                                        name="locationLink"
+                                        value={formData.locationLink}
+                                        onChange={handleChange}
+                                        placeholder="Google Maps Link"
+                                        className="bg-white/5 border-white/10 text-white focus:border-primary flex-1"
+                                    />
+                                    <Dialog open={isMapOpen} onOpenChange={setIsMapOpen}>
+                                        <DialogTrigger asChild>
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                className="border-primary/50 text-primary hover:bg-primary/10 hover:text-primary whitespace-nowrap"
+                                            >
+                                                <MapPin className="h-4 w-4 mr-2" />
+                                                Pick on Map
+                                            </Button>
+                                        </DialogTrigger>
+                                        <DialogContent className="max-w-3xl bg-card border-white/10 text-white">
+                                            <DialogHeader>
+                                                <DialogTitle>Mark Delivery Location</DialogTitle>
+                                                <DialogDescription>
+                                                    Drag the marker to your exact location.
+                                                </DialogDescription>
+                                            </DialogHeader>
+
+                                            <div className="py-4">
+                                                <LocationPicker
+                                                    onLocationSelect={handleLocationSelect}
+                                                />
+                                            </div>
+
+                                            <div className="flex justify-end gap-3">
+                                                <Button variant="ghost" onClick={() => setIsMapOpen(false)}>Cancel</Button>
+                                                <Button
+                                                    onClick={() => {
+                                                        if (tempLocation) {
+                                                            const link = `https://www.google.com/maps?q=${tempLocation.lat},${tempLocation.lng}`;
+                                                            setFormData(prev => ({ ...prev, locationLink: link }));
+                                                            setIsMapOpen(false);
+                                                        }
+                                                    }}
+                                                >
+                                                    Confirm Location
+                                                </Button>
+                                            </div>
+                                        </DialogContent>
+                                    </Dialog>
+                                </div>
+                                <p className="text-xs text-muted-foreground">
+                                    Click "Pick on Map" mode to pin your exact location.
+                                </p>
                             </div>
 
                             <div className="space-y-4 pt-4 border-t border-white/10">

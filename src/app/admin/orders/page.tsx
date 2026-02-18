@@ -191,6 +191,19 @@ export default function AdminOrdersPage() {
                                                                 <br />
                                                                 <span className="text-muted-foreground">PIN:</span> {order.pincode}
                                                             </div>
+                                                            {order.locationLink && (
+                                                                <div className="mt-4">
+                                                                    <a
+                                                                        href={order.locationLink}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors"
+                                                                    >
+                                                                        <MapPin className="h-4 w-4" />
+                                                                        View Exact Location on Maps
+                                                                    </a>
+                                                                </div>
+                                                            )}
                                                         </div>
 
                                                         <div className="space-y-4">
